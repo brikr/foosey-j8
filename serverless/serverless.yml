@@ -1,0 +1,50 @@
+service: foosey
+
+provider:
+  name: aws
+  runtime: java8
+  stage: dev
+  region: us-east-1
+  environment: ${file(foosey.yml):environment}
+
+package:
+  artifact: target/foosey-dev.jar
+
+functions:
+  hello:
+    handler: com.serverless.Handler
+    events:
+      - http:
+          path: hitme
+          method: get
+  initializeSchema:
+    handler: com.foosey.database.SchemaInitializer
+
+resources:
+  Resources:
+    FooseyDatabase:
+      Type: AWS::RDS::DBInstance
+      Properties:
+        DBInstanceIdentifier: fooseyDatabase
+        DBInstanceClass: db.t2.micro
+        AllocatedStorage: 5
+        Engine: mysql
+        MasterUsername: ${file(foosey.yml):environment.RDS_USERNAME}
+        MasterUserPassword: ${file(foosey.yml):environment.RDS_PASSWORD}
+  Outputs:
+    FooseyDatabaseHostname:
+      Description: FooseyDatabase hostname
+      Value:
+        'Fn::GetAtt': [ FooseyDatabase, Endpoint.Address ]
+      Export:
+        Name: '${self:service}:${self:provider.stage}:DatabaseHostname'
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: japi.foosey.futbol
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
