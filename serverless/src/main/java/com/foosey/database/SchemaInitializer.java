@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.serverless.ApiGatewayResponse;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class SchemaInitializer implements RequestHandler<Map<String, Object>, Ap
 
             // Create Game table
             con.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS" +
+                    "CREATE TABLE IF NOT EXISTS " +
                             "Game(" +
                             "GameID INTEGER NOT NULL," +
                             "PlayerID INTEGER NOT NULL," +
@@ -43,12 +44,12 @@ public class SchemaInitializer implements RequestHandler<Map<String, Object>, Ap
 
             // Create Player table
             con.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS" +
+                    "CREATE TABLE IF NOT EXISTS " +
                             "Player(" +
                             "PlayerID INTEGER PRIMARY KEY," +
                             "LeagueID INTEGER NOT NULL," +
                             "DisplayName VARCHAR(100) NOT NULL," +
-                            "Admin TINYINY(1) DEFAULT 0 NOT NULL," +
+                            "Admin TINYINT(1) DEFAULT 0 NOT NULL," +
                             "Active TINYINT(1) DEFAULT 1 NOT NULL," +
                             "Elo INTEGER DEFAULT 1200 NOT NULL," +
                             "GamesPlayed INTEGER DEFAULT 0 NOT NULL," +
@@ -58,7 +59,7 @@ public class SchemaInitializer implements RequestHandler<Map<String, Object>, Ap
 
             // Create League table
             con.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS" +
+                    "CREATE TABLE IF NOT EXISTS " +
                             "League(" +
                             "LeagueID INTEGER PRIMARY KEY," +
                             "LeagueCode VARCHAR(16) UNIQUE," +
@@ -67,7 +68,7 @@ public class SchemaInitializer implements RequestHandler<Map<String, Object>, Ap
 
             // Create EloHistory table
             con.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS" +
+                    "CREATE TABLE IF NOT EXISTS " +
                             "EloHistory(" +
                             "GameID INTEGER NOT NULL," +
                             "PlayerID INTEGER NOT NULL," +
@@ -90,11 +91,14 @@ public class SchemaInitializer implements RequestHandler<Map<String, Object>, Ap
                 .build();
     }
 
-    class SchemaInitializerResponse {
+    class SchemaInitializerResponse implements Serializable {
         private final String message;
 
         public SchemaInitializerResponse(String message) {
             this.message = message;
+        }
+        public String getMessage() {
+            return message;
         }
     }
 }

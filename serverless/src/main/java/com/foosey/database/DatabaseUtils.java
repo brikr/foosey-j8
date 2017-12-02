@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DatabaseUtils {
@@ -16,7 +15,7 @@ public class DatabaseUtils {
     public static Connection getConnection() {
         if (System.getenv("RDS_HOSTNAME") != null) {
             try {
-                Class.forName("org.mysql.Driver");
+                Class.forName("com.mysql.jdbc.Driver");
                 String dbName = System.getenv("RDS_DB_NAME");
                 String userName = System.getenv("RDS_USERNAME");
                 String password = System.getenv("RDS_PASSWORD");

@@ -19,6 +19,11 @@ functions:
           method: get
   initializeSchema:
     handler: com.foosey.database.SchemaInitializer
+    # TODO: remove this endpoint when it works. keeping it here to test easily
+    events:
+      - http:
+          path: initialize
+          method: get
 
 resources:
   Resources:
