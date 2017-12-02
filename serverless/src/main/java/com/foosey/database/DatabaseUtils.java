@@ -27,7 +27,7 @@ public class DatabaseUtils {
                 LOG.info("Remote connection successful.");
                 return con;
             }
-            catch (ClassNotFoundException | SQLException e) { LOG.warn(e.toString());}
+            catch (ClassNotFoundException | SQLException e) { LOG.error(e.toString());}
         }
         return null;
     }
